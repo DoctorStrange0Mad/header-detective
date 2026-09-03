@@ -1,0 +1,17 @@
+Return-Path: <admin@trusted.org>
+Received: from mx1.trusted.org (mx1.trusted.org. [203.0.113.5])
+        by inbound.protection.outlook.com with ESMTPS id 123456abcdef
+        for <employee@corporate.com>;
+        Thu, 03 Sep 2026 14:45:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=trusted.org; s=dkim2026;
+        h=from:to:subject:date:message-id;
+        bh=dummyhash2=;
+        b=dummysignature2=
+From: Admin <admin@trusted.org>
+To: Employee <employee@corporate.com>
+Subject: Clean Sample 3
+Date: Thu, 03 Sep 2026 14:45:00 -0700
+Message-ID: <clean3@trusted.org>
+
+Another clean sample for testing.

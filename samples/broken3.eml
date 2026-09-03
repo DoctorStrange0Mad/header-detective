@@ -1,0 +1,6 @@
+Return-Path: <sender@example.com>
+Received: from mail.example.com (mail.example.com. [192.0.2.1])
+        by mx.google.com with ESMTPS id abc123;
+        Thu, 03 Sep 2026 10:00:00 -0700 (PDT)
+From: sender@example.com
+Subject: Broken3 - Truncated/malformed header mid-li

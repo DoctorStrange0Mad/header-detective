@@ -1,0 +1,7 @@
+From: sender@example.com
+To: recipient@example.com
+Subject: Broken1 - Missing Received headers
+Date: Thu, 03 Sep 2026 10:00:00 -0700
+Message-ID: <broken1@example.com>
+
+This email has no Received headers at all.

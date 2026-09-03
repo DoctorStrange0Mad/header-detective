@@ -1,0 +1,12 @@
+Return-Path: <sender@example.com>
+Received: from mail.example.com (mail.example.com. [192.0.2.1])
+        by mx.google.com with ESMTPS id abc123
+        for <recipient@gmail.com>;
+        Thu, 03 Sep 2026 10:00:00 -0700 (PDT)
+From: sender@example.com
+To: recipient@gmail.com
+Subject: Broken2 - Stripped DKIM-Signature
+Date: Thu, 03 Sep 2026 10:00:00 -0700
+Message-ID: <broken2@example.com>
+
+This email had its DKIM-Signature header stripped out.

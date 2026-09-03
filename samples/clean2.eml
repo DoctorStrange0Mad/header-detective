@@ -1,0 +1,12 @@
+Return-Path: <marketing@legit-company.com>
+Received: from mta.legit-company.com (mta.legit-company.com. [198.51.100.2])
+        by mx.google.com with ESMTPS id fedcba654321
+        for <user@gmail.com>;
+        Thu, 03 Sep 2026 11:30:00 -0700 (PDT)
+From: Marketing <marketing@legit-company.com>
+To: User <user@gmail.com>
+Subject: Clean Sample 2 - No DKIM
+Date: Thu, 03 Sep 2026 11:30:00 -0700
+Message-ID: <clean2@legit-company.com>
+
+This is a clean email sample without a DKIM signature, but valid otherwise.

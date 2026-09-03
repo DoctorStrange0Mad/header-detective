@@ -1,0 +1,17 @@
+Return-Path: <sender@example.com>
+Received: from mail.example.com (mail.example.com. [192.0.2.1])
+        by mx.google.com with ESMTPS id abcdef123456
+        for <recipient@gmail.com>;
+        Thu, 03 Sep 2026 10:00:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=example.com; s=selector1;
+        h=from:to:subject:date:message-id;
+        bh=dummyhash=;
+        b=dummysignature=
+From: Sender <sender@example.com>
+To: Recipient <recipient@gmail.com>
+Subject: Clean Sample 1
+Date: Thu, 03 Sep 2026 10:00:00 -0700
+Message-ID: <clean1@example.com>
+
+This is a clean email sample.

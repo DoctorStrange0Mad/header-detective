@@ -1,0 +1,292 @@
+Delivered-To: tejaspn355@gmail.com
+Received: by 2002:a05:7108:b241:b0:57f:f039:faae with SMTP id od1csp8516175gdb;
+        Fri, 7 Aug 2026 02:56:45 -0700 (PDT)
+X-Received: by 2002:a05:6a21:697:b0:3c3:c3fb:2473 with SMTP id adf61e73a8af0-3cb85e736ecmr28258644637.20.1786096605672;
+        Fri, 07 Aug 2026 02:56:45 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1786096605; cv=none;
+        d=google.com; s=arc-20260327;
+        b=ONlg7NPosjTxuXs6DR3ITLthWQxY4SR55hTG9Yk+37adc+Bg3w40exw8Tpnlbz65u/
+         +l76u30fnIJB8MxnQG4NDlfzkuaCW14fgBJKrT+0OUeuDmjZt2QKi4BLaZZCsWSsDOB8
+         IweLP8s8zLp78qnDHcsoA9LkEmgI1185gz6cBHYjmAwPzfMgJ+21Un2+VIdpEaSh2/9p
+         ar7aUibAebbPCKjPtDVCU6PynKvHEP65BChKZPsURRXwMLs/y8LGucEfcCq4wx5T+GeL
+         1KOuwT6im4oxQ+HmMDucRTMdMiLOABMpVIJ2J+txgqL+Ds+fGYJNq+1EH80V4QyHogIe
+         LWrg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=feedback-id:reply-to:sender:list-unsubscribe-post:list-unsubscribe
+         :mime-version:subject:message-id:to:from:date:dkim-signature
+         :dkim-signature;
+        bh=Y2a2qltxDrKAkn18kFjfg6iUTKtwXbCqtrQlsobxNFM=;
+        fh=VM54o8BJwmGoBvqaZeZIM/6Ms6VOiz6GlQal/zLa1TM=;
+        b=TCDuygJfHVdG64i6Gz66ei0B1aTzcLNOnCh3H1lAZ0f/jw5tFQhO0uVHytT4t2Tiv0
+         CpV/vfIJHfWq31tUBF5nB3jpmBgOtCtVhtq+XdxG9akQ5Njt0Okq7NL+jOOs88Sjve9P
+         odVMu+oC6r1ISfVxEBRvcGyDjCJJtvJSmecF7y/znDR2XWhyA+8UVwWd6IfxTW4rcri3
+         ZcwFtYLks4oSOpvthkXDo8nvL7RbUSnJtWviO4yZxzvqnj2/rqjyCPnUA+bQK9MHQFcP
+         w566Uvq3MsPsVMdL+n6+K8v+hOWGtkaue+i5BzOue3QV8M6lssJG1JbkCnEQPNb0OTSK
+         Rv7Q==;
+        dara=google.com
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@emails.futureskillsprime.in header.s=12178 header.b=XqhAAvjj;
+       dkim=pass header.i=@mail8.sender.zcmpin.net header.s=k1 header.b=OMnGG5Ed;
+       spf=pass (google.com: domain of bounce_60033168450+a.12d8e64cd5ea3bbf_vmp@mail1.zgpm.zcsend.in designates 103.103.198.88 as permitted sender) smtp.mailfrom=bounce_60033168450+a.12d8e64cd5ea3bbf_vmp@mail1.zgpm.zcsend.in;
+       dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=futureskillsprime.in
+Return-Path: <bounce_60033168450+a.12d8e64cd5ea3bbf_vmp@mail1.zgpm.zcsend.in>
+Received: from sender88.psin1.zcsend.in (sender88.psin1.zcsend.in. [103.103.198.88])
+        by mx.google.com with ESMTPS id a92af1059eb24-14101a16f7dsi5125072c88.48.2026.08.07.02.56.45
+        for <tejaspn355@gmail.com>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Aug 2026 02:56:45 -0700 (PDT)
+Received-SPF: pass (google.com: domain of bounce_60033168450+a.12d8e64cd5ea3bbf_vmp@mail1.zgpm.zcsend.in designates 103.103.198.88 as permitted sender) client-ip=103.103.198.88;
+Authentication-Results: mx.google.com;
+       dkim=pass header.i=@emails.futureskillsprime.in header.s=12178 header.b=XqhAAvjj;
+       dkim=pass header.i=@mail8.sender.zcmpin.net header.s=k1 header.b=OMnGG5Ed;
+       spf=pass (google.com: domain of bounce_60033168450+a.12d8e64cd5ea3bbf_vmp@mail1.zgpm.zcsend.in designates 103.103.198.88 as permitted sender) smtp.mailfrom=bounce_60033168450+a.12d8e64cd5ea3bbf_vmp@mail1.zgpm.zcsend.in;
+       dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=futureskillsprime.in
+Received: from 10.220.57.232 by sender88.psin1.zcsend.in
+	with SMTP id 178609380167427277; Fri, 07 Aug 2026 14:40:01 +0530
+DKIM-Signature: a=rsa-sha256; q=dns/txt; b=XqhAAvjjI1vz/mGpXCubTnUScpZRaCElcqLTtzE6zx89/Vkgw/mMUJA0UN7wW0c6H23ZOA5xNHFsd/x09C/3hm123xeB59uoClS32du7adVviOJD0zFdBX6ul1E/xThAmVE/7flDTbOep3YRb3JXk6tzKOhzdijlh/pNMixO2JA=; c=simple/simple; s=12178; d=emails.futureskillsprime.in; v=1; bh=gQ9JjFYFaHXCmnqwG/yyQ3KTR4lTlpLiIJJ5dblcUVc=; h=date:date:from:from:to:to:message-id:subject:subject:mime-version:content-type:list-unsubscribe:list-unsubscribe:list-unsubscribe-post:x-csa-complaints;
+DKIM-Signature: a=rsa-sha256; q=dns/txt; b=OMnGG5EdKrdxOh74b3+pluvU7piqXn0IQE1q+2xog20yWnbGFHREPgfjR6P9h2J1Op3SE0uMp5E6nOMkMTBUXDGCTiP+g8d4+yG7OJcPzhY02nzMenMZ93i0Y60bkWheAFnFRQbM9s3wc+zZItbDyfcwAcOt3nzj6Y/EthrwboU=; c=simple/simple; s=k1; d=mail8.sender.zcmpin.net; v=1; bh=gQ9JjFYFaHXCmnqwG/yyQ3KTR4lTlpLiIJJ5dblcUVc=; h=date:date:from:from:to:to:message-id:subject:subject:mime-version:content-type:list-unsubscribe:list-unsubscribe:list-unsubscribe-post:x-csa-complaints;
+Date: Fri, 7 Aug 2026 14:40:01 +0530 (IST)
+From: "FutureSkills Prime" <learner@futureskillsprime.in>
+To: tejaspn355@gmail.com
+Message-ID: <zcb.3z72e5314e484b84c2758fbeb29235d6956e215b60c7026388b16aeffec78503c2.12d8e64cd5ea3bbf.1786093801672@mail1.zgpm.zcsend.in>
+Subject: Reserve Your Seat: Prime CareerMantra Webinar | 11 August
+MIME-Version: 1.0
+Content-Type: multipart/alternative; 
+	boundary="----=_Part_3979888_1102126035.1786093801671"
+List-Unsubscribe: <https://ftuwy-zgpm.maillist-manage.in/ua/optout?od=3z72e5314e484b84c2758fbeb29235d6956e215b60c7026388b16aeffec78503c2&rd=12d8e64cd5ea3bbf&sd=12d8e64cd5d7107e&n=11699e4be65912a>,<mailto:leave_60033168450+12d8e64cd5ea3bbf_12d8e64cd5d7107e@zcsend.in>
+List-Unsubscribe-Post: List-Unsubscribe=One-Click
+X-CSA-Complaints: csa-complaints@eco.de
+Sender: learner@emails.futureskillsprime.in
+Reply-To: learner@futureskillsprime.in
+Feedback-ID: c12d8e64cd5d70c94:z1dfa417442:s1a3b5988025cd:d1a0fb06208929
+X-JID: 3z72e5314e484b84c2758fbeb29235d6956e215b60c7026388b16aeffec78503c2.12d8e64cd5d70c94
+X-campaignid: zohocampaigns.3z72e5314e484b84c2758fbeb29235d6956e215b60c7026388b16aeffec78503c2.zcb.12d8e64cd5ea3bbf.11699e4be65912a
+X-Zoho-RID: zohocampaigns.3z72e5314e484b84c2758fbeb29235d6956e215b60c7026388b16aeffec78503c2.zcb.12d8e64cd5ea3bbf.11699e4be65912a
+X-Mailer: Zoho Marketing Automation
+X-Report-Abuse: <Please send a copy of this message along with header to abuse+3z72e5314e484b84c2758fbeb29235d6956e215b60c7026388b16aeffec78503c2_zcb_12d8e64cd5ea3bbf@zohocampaigns.in>, <https://ftuwy-zgpm.maillist-manage.in/campaigns/ReportAbuse.zc?od=3z72e5314e484b84c2758fbeb29235d6956e215b60c7026388b16aeffec78503c2&rd=12d8e64cd5ea3bbf&sd=12d8e64cd5d7107e&n=11699e4be65912a>
+
+------=_Part_3979888_1102126035.1786093801671
+Content-Type: text/plain;charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+     =20
+   =20
+   =20
+  https://us06web.zoom.us/webinar/register/WN_491chbpARGiaH42Zp0DLrA?utm_so=
+urce=3DEmailer_CareerMantra&utm_medium=3Demailer&utm_campaign=3DParveen_Mor=
+  =20
+  https://us06web.zoom.us/webinar/register/WN_491chbpARGiaH42Zp0DLrA?utm_so=
+urce=3DEmailer_CareerMantra&utm_medium=3Demailer&utm_campaign=3DParveen_Mor=
+  =20
+      =20
+   https://www.facebook.com/fsprimeofficial  =20
+  https://x.com/fsprimeofficial  =20
+  https://www.instagram.com/futureskillsprime/  =20
+  https://www.linkedin.com/company/futureskillsprime/  =20
+  https://www.youtube.com/FutureSkillsPrime   =20
+       =20
+
+
+
+
+----------------------------------------------------------------------
+This email was sent by learner@futureskillsprime.in to tejaspn355@gmail.com
+
+Not interested? Unsubscribe - https://ftuwy-zgpm.maillist-manage.in/ua/opto=
+ut?od=3D3z72e5314e484b84c2758fbeb29235d6956e215b60c7026388b16aeffec78503c2&=
+rd=3D12d8e64cd5ea3bbf&sd=3D12d8e64cd5d7107e&n=3D11699e4be65912a
+
+Update profile -  https://ftuwy-zgpm.maillist-manage.in/ua/upc?upd=3D12d8e6=
+4cb35477d4&r=3D12d8e64cd5ea3bbf&n=3D11699e4be65912a&od=3D3z72e5314e484b84c2=
+758fbeb29235d6956e215b60c7026388b16aeffec78503c2&r=3D12d8e64cd5ea3bbf&n=3D1=
+1699e4be65912a&od=3D3z72e5314e484b84c2758fbeb29235d6956e215b60c7026388b16ae=
+ffec78503c2
+  =20
+
+
+
+  |  =20
+
+
+
+
+
+------=_Part_3979888_1102126035.1786093801671
+Content-Type: text/html;charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<html><head>
+=20
+=20
+ <title>Reserve Your Seat: Prime CareerMantra Webinar | 11 August</title><m=
+eta content=3D"text/html;charset=3Dutf-8" http-equiv=3D"Content-Type"></hea=
+d><body bgcolor=3D"#FFFFFF" leftmargin=3D"0" marginheight=3D"0" marginwidth=
+=3D"0" topmargin=3D"0"><!--[if !mso 9]><!--><span style=3D'font-size:0px;ma=
+x-width: 0px;max-height: 0px;mso-hide:all;display:block;'>  </span><!--<![e=
+ndif]-->
+ <table align=3D"center" border=3D"0" cellpadding=3D"0" cellspacing=3D"0" i=
+d=3D"Table_01" width=3D"650">
+ =09<tbody><tr>
+ =09=09<td style=3D"font-size:0;line-height:0;">
+ =09=09=09<img alt=3D"images/PrimeCareerMantra_01.jpg" src=3D"https://strat=
+us.campaign-image.in/images/1786073498085_1_zc_v1_205167000724901014.jpg" s=
+tyle=3D"display:block;border:0;"></td>
+ =09</tr>
+ =09<tr>
+ =09=09<td style=3D"font-size:0;line-height:0;">
+ =09=09=09<img alt=3D"images/PrimeCareerMantra_02.jpg" src=3D"https://strat=
+us.campaign-image.in/images/1786073498088_2_zc_v1_205167000724901014.jpg" s=
+tyle=3D"display:block;border:0;"></td>
+ =09</tr>
+ =09<tr>
+ =09=09<td style=3D"font-size:0;line-height:0;">
+ =09=09=09<img alt=3D"images/PrimeCareerMantra_03.jpg" src=3D"https://strat=
+us.campaign-image.in/images/1786073498090_3_zc_v1_205167000724901014.jpg" s=
+tyle=3D"display:block;border:0;"></td>
+ =09</tr>
+ =09<tr>
+ =09=09<td style=3D"font-size:0;line-height:0;"><a href=3D"https://ftuwy-zg=
+pm.maillist-manage.in/click/12d8e64cd5ea3bbf/12d8e64cd5d70cd9" target=3D"_b=
+lank" zcurl_name=3D"l_0"><img alt=3D"images/PrimeCareerMantra_04.jpg" src=
+=3D"https://stratus.campaign-image.in/images/1786073498092_4_zc_v1_20516700=
+0724901014.jpg" style=3D"display:block;border:0;"></a></td>
+ =09</tr>
+ =09<tr>
+ =09=09<td style=3D"font-size:0;line-height:0;"><a href=3D"https://ftuwy-zg=
+pm.maillist-manage.in/click/12d8e64cd5ea3bbf/12d8e64cd5d70cda" zcurl_name=
+=3D"l_1"><img alt=3D"images/PrimeCareerMantra_05.jpg" src=3D"https://stratu=
+s.campaign-image.in/images/1786073498094_5_zc_v1_205167000724901014.jpg" st=
+yle=3D"display:block;border:0;"></a></td>
+ =09</tr>
+ =09<tr>
+             <td align=3D"center" bgcolor=3D"#0144a0" style=3D"background-c=
+olor:#0144a0;font-size:0;line-height:0;">
+               <table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" clas=
+s=3D"devicewidthinner" width=3D"28%">
+                 <tbody>
+                   <tr>
+                     <td colspan=3D"5" height=3D"10" style=3D"font-size:0;l=
+ine-height:0;"></td>
+                   </tr>
+                   <tr>
+                     <td align=3D"center" style=3D"font-size:0;line-height:=
+0;">
+                       <a href=3D"https://ftuwy-zgpm.maillist-manage.in/cli=
+ck/12d8e64cd5ea3bbf/12d8e64cd5d70cdb" target=3D"_blank" zcurl_name=3D"l_2">
+                         <img alt=3D"images/Untitled-1_01.jpg" src=3D"https=
+://stratus.campaign-image.in/images/1786073498096_6_zc_v1_20516700072490101=
+4.jpg" style=3D"display:block;border:0;">
+                       </a>
+                     </td>
+                     <td align=3D"center" style=3D"font-size:0;line-height:=
+0;">
+                       <a href=3D"https://ftuwy-zgpm.maillist-manage.in/cli=
+ck/12d8e64cd5ea3bbf/12d8e64cd5d70cdc" target=3D"_blank" zcurl_name=3D"l_3">
+                         <img alt=3D"images/Untitled-1_02.jpg" src=3D"https=
+://stratus.campaign-image.in/images/1786073498097_7_zc_v1_20516700072490101=
+4.jpg" style=3D"display:block;border:0;">
+                       </a>
+                     </td>
+                     <td align=3D"center" style=3D"font-size:0;line-height:=
+0;">
+                       <a href=3D"https://ftuwy-zgpm.maillist-manage.in/cli=
+ck/12d8e64cd5ea3bbf/12d8e64cd5d70cdd" target=3D"_blank" zcurl_name=3D"l_4">
+                         <img alt=3D"images/Untitled-1_03.jpg" src=3D"https=
+://stratus.campaign-image.in/images/1786073498098_8_zc_v1_20516700072490101=
+4.jpg" style=3D"display:block;border:0;">
+                       </a>
+                     </td>
+                     <td align=3D"center" style=3D"font-size:0;line-height:=
+0;">
+                       <a href=3D"https://ftuwy-zgpm.maillist-manage.in/cli=
+ck/12d8e64cd5ea3bbf/12d8e64cd5d70cde" target=3D"_blank" zcurl_name=3D"l_5">
+                         <img alt=3D"images/Untitled-1_04.jpg" src=3D"https=
+://stratus.campaign-image.in/images/1786073498100_9_zc_v1_20516700072490101=
+4.jpg" style=3D"display:block;border:0;">
+                       </a>
+                     </td>
+                     <td align=3D"center" style=3D"font-size:0;line-height:=
+0;">
+                       <a href=3D"https://ftuwy-zgpm.maillist-manage.in/cli=
+ck/12d8e64cd5ea3bbf/12d8e64cd5d70cdf" target=3D"_blank" zcurl_name=3D"l_6">
+                         <img alt=3D"images/Untitled-1_05.jpg" src=3D"https=
+://stratus.campaign-image.in/images/1786073498102_10_zc_v1_2051670007249010=
+14.jpg" style=3D"display:block;border:0;">
+                       </a>
+                     </td>
+                   </tr>
+                   <tr>
+                     <td colspan=3D"5" height=3D"10" style=3D"font-size:0;l=
+ine-height:0;"></td>
+                   </tr>
+                 </tbody>
+               </table>
+             </td>
+           </tr>
+ </tbody></table>
+=20
+=20
+        <meta content=3D"width=3Ddevice-width" name=3D"viewport">
+        <style>@media only screen and (max-device-width: 480px) {table[clas=
+s=3Dtmplfooter]{width:330px !important;max-width:320px !important; text-ali=
+gn:left;} table[class=3Dtmplheader]{width:330px !important; max-width:320px=
+ !important; text-align:left;} div[class=3Dtxtsize]{text-align:left} td[cla=
+ss=3Dtxtsize]{text-align:left}}
+        </style>
+
+<table cellpadding=3D"0" cellspacing=3D"0" id=3D"FOOTER" style=3D"backgroun=
+d-color:#f7f7f7;color:#333;font-size:11px;border-color:#f0f0f0;border-width=
+:1px;font-family:Arial;border-style:solid;" width=3D"100%"><tbody><tr><td>
+        <table align=3D"center" cellpadding=3D"9" cellspacing=3D"0" class=
+=3D"tmplfooter" id=3D"F_INNER" style=3D"padding:5px;width:600px;;color:inhe=
+rit;font-size:inherit;font-family:inherit;;text-align:center">
+        <tbody><tr><td>
+                <div class=3D"txtsize">
+               =20
+                <div style=3D"color:#333;font-size:11px;font-family:Arial;"=
+>This email was sent by <a href=3D"mailto:learner@futureskillsprime.in" id=
+=3D"FOOTERLINK" style=3D"color:#0000FF;font-size:11px;font-family:Arial;" t=
+arget=3D"_blank"><span style>learner@futureskillsprime.in</span></a> to <a =
+href=3D"mailto:tejaspn355@gmail.com" id=3D"FOOTERLINK" style=3D"color:#0000=
+FF;font-size:11px;font-family:Arial;" target=3D"_blank"><span style>tejaspn=
+355@gmail.com</span></a></div>
+                        <div class=3D"txtsize" style=3D"padding:3px;padding=
+-left:0px;color:#333;font-size:11px;font-family:Arial;">Not interested? <a =
+href=3D"https://ftuwy-zgpm.maillist-manage.in/ua/optout?od=3D3z72e5314e484b=
+84c2758fbeb29235d6956e215b60c7026388b16aeffec78503c2&rd=3D12d8e64cd5ea3bbf&=
+sd=3D12d8e64cd5d7107e&n=3D11699e4be65912a" id=3D"FOOTERLINK" rel=3D"nofollo=
+w" style=3D"color:#0000FF;font-size:11px;font-family:Arial;" target=3D"_bla=
+nk"><span style>Unsubscribe</span></a> | <a href=3D"https://ftuwy-zgpm.mail=
+list-manage.in/ua/commpref?od=3D3z72e5314e484b84c2758fbeb29235d6956e215b60c=
+7026388b16aeffec78503c2&rd=3D12d8e64cd5ea3bbf&sd=3D12d8e64cd5d7107e&n=3D116=
+99e4be65912a" id=3D"FOOTERLINK" rel=3D"nofollow" style=3D"color:#0000FF;fon=
+t-size:11px;font-family:Arial;" target=3D"_blank"><span id=3D"f11p">Manage =
+Preference</span></a> | <a href=3D"https://ftuwy-zgpm.maillist-manage.in/ua=
+/upc?upd=3D12d8e64cb35477d4&r=3D12d8e64cd5ea3bbf&n=3D11699e4be65912a&od=3D3=
+z72e5314e484b84c2758fbeb29235d6956e215b60c7026388b16aeffec78503c2" id=3D"FO=
+OTERLINK" rel=3D"nofollow" style=3D"color:#0000FF;font-size:11px;font-famil=
+y:Arial;" target=3D"_blank"><span style>Update profile</span></a> =20
+                        </div>
+                        <div data-id=3D"listdescription" style=3D"margin-to=
+p:5px;color:#333;font-size:11px;font-family:Arial;"></div>
+                        <div class=3D"txtsize" id=3D"FOOTERADDRESS" style=
+=3D"padding:3px;padding-left:0px;color:#acacac;font-size:11px;font-family:A=
+rial;">  |  </div>
+<div class=3D"txtsize" id=3D"FOOTERIMPRINT" style=3D"padding:3px;padding-le=
+ft:0px;color:#acacac;font-size:11px;font-family:Arial;"></div>
+                        <div style=3D"margin-top:5px">   </div>
+<div class=3D"txtsize" id=3D"FOOTERPRIVACYTERMS" style=3D"padding:3px;paddi=
+ng-left:0px;word-break:break-word;line-height:12pt;color:#acacac;font-size:=
+11px;font-family:Arial;"></div>
+                       =20
+                </div>
+        </td></tr>
+</tbody></table>
+        </td></tr>
+</tbody></table>
+<img style=3D'visibility:hidden' src=3D"https://ftuwy-zgpm.maillist-manage.=
+in/click/12d8e64cd5ea3bbf/open.gif" alt=3D"" height=3D"1" width=3D"1"/><a s=
+tyle=3D'visibility:hidden' href=3D"https://ftuwy-zgpm.maillist-manage.in/cl=
+ick/12d8e64cd5ea3bbf/12d8e64cd5d70c96" alt=3D"" height=3D"1" width=3D"1"/><=
+/body></html>
+------=_Part_3979888_1102126035.1786093801671--
