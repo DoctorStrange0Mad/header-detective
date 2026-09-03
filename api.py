@@ -13,6 +13,7 @@ import tempfile
 import os
 import json
 from main import process_email
+from language_detector import analyze_eml
 
 app = FastAPI(
     title="Header Detective API",
@@ -76,6 +77,35 @@ async def analyze_email(file: UploadFile = File(...)):
             os.unlink(tmp_path)
         except:
             pass
+
+@app.post("/analyze-language")
+async def analyze_language(file: UploadFile = File(...)):
+    """Analyze email language without changing the existing /analyze contract."""
+    if not file.filename or not file.filename.lower().endswith(".eml"):
+        raise HTTPException(status_code=400, detail="Only .eml files are supported")
+
+    tmp_path = None
+    try:
+        with tempfile.NamedTemporaryFile(suffix=".eml", delete=False) as tmp:
+            tmp.write(await file.read())
+            tmp_path = tmp.name
+        return analyze_eml(tmp_path)
+    except Exception as exc:
+        # Do not expose uploaded email contents in errors or logs.
+        return {
+            "language_analysis": {
+                "model": {"name": "dima806/phishing-email-detection", "label": None, "phishing_probability": None, "score": None, "available": False},
+                "rule_score": 0.0, "language_threat_score": 0.0, "classification": "low_risk",
+                "indicators": [], "entities": {"persons": [], "organizations": [], "money": [], "dates": [], "locations": []},
+                "summary": [], "warnings": [f"Language upload/parser failure: {type(exc).__name__}"],
+            }
+        }
+    finally:
+        if tmp_path:
+            try:
+                os.unlink(tmp_path)
+            except OSError:
+                pass
 
 @app.get("/health")
 def health():

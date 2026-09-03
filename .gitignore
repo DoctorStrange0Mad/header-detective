@@ -14,3 +14,8 @@ GeoLite2-City.mmdb
 
 # Frontend build artefacts
 frontend/node_modules/
+
+# Hugging Face and spaCy artifacts must remain local
+.cache/
+hf_cache/
+models/

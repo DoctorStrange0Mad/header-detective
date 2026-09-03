@@ -11,7 +11,7 @@ and plots the relay path on a world map (Geo Visualizer module).
 |---|---|---|
 | Tejas | Relay Tracing + Auth Checks | `main.py` / `api.py` |
 | Jayshree | Geo Visualizer (Map Builder) | `geo_lookup.py` / `geo_preview.py` |
-| Ashith | Language Detective (NLP) | — |
+| Ashith | Language Detective (NLP) | `language_detector/detector.py` / `api.py` (`POST /analyze-language`) |
 | Sahishnu | Link/Attachment Scanner + Campaign Graph | — |
 | Pushkar | Scorecard + Report Generator | — |
 | Sagar | Dashboard Integrator | — |
@@ -34,6 +34,41 @@ Or use the requirements file (after adding `geoip2`):
 pip install -r requirements.txt
 pip install geoip2
 ```
+
+### Language Detective (Member 3)
+
+`POST /analyze-language` accepts an `.eml` upload like `/analyze`, but returns
+only the isolated language-analysis contract and does not change Header
+Detective's existing response. Install the added dependencies and spaCy model:
+
+```bash
+pip install -r requirements.txt
+python -m spacy download en_core_web_sm
+```
+
+The first local inference downloads/caches
+`dima806/phishing-email-detection`; email content is never sent to an external
+inference API. If ML or spaCy is unavailable, the API returns rule-based
+evidence with a warning. Run tests with:
+
+```bash
+python -m unittest language_detector.tests.test_language_detector
+```
+
+Run the service and open the interactive API page:
+
+```bash
+uvicorn api:app --reload --port 8001
+```
+
+Open `http://127.0.0.1:8001/docs`, select `POST /analyze-language`, click
+**Try it out**, upload an `.eml` file, then click **Execute**.
+
+The response contains `language_analysis.model.phishing_probability`,
+`rule_score`, `language_threat_score`, matched `indicators`, spaCy `entities`,
+and `warnings`. A model-only medium-risk result with no indicators is an
+uncertain signal requiring review; it does not prove the email is phishing.
+This module is one input to the final multi-signal score owned by Members 5/6.
 
 ---
 
@@ -170,6 +205,8 @@ npm test
 | [FastAPI](https://fastapi.tiangolo.com/) + [Uvicorn](https://www.uvicorn.org/) | REST API |
 | [python-multipart](https://pypi.org/project/python-multipart/) | File uploads |
 | [geoip2](https://pypi.org/project/geoip2/) | MaxMind DB reader (Geo Visualizer) |
+| [transformers](https://huggingface.co/docs/transformers/) + [PyTorch](https://pytorch.org/) | Local phishing classifier (`dima806/phishing-email-detection`) |
+| [spaCy](https://spacy.io/) + `en_core_web_sm` | Local NER for language-analysis context |
 
 ### Frontend (Geo Visualizer)
 

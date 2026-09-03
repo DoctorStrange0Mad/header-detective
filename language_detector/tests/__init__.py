@@ -1,0 +1,1 @@
+"""Language Detective automated tests."""

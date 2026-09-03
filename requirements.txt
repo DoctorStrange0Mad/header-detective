@@ -6,3 +6,6 @@ python-dateutil
 fastapi
 uvicorn
 python-multipart
+transformers
+torch
+spacy
