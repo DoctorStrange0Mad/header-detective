@@ -9,3 +9,5 @@ python-multipart
 transformers
 torch
 spacy
+reportlab
+pydantic
