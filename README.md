@@ -1,4 +1,4 @@
-[README.md](https://github.com/user-attachments/files/31772765/README.md)
+
 # Header Detective
 
 Parses `.eml` email files for SPF/DKIM/DMARC results and relay hop info.

@@ -1,0 +1,8 @@
+mail-parser
+dnspython
+dkimpy
+checkdmarc
+python-dateutil
+fastapi
+uvicorn
+python-multipart
