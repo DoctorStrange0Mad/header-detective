@@ -9,6 +9,7 @@ import checkdmarc
 import mailparser
 import re
 import ipaddress
+from hop_parser import extract_ip
 
 def get_domain_from_email(email_str):
     if not email_str:
@@ -17,49 +18,65 @@ def get_domain_from_email(email_str):
         if not email_str:
             return None
         email_str = email_str[0]
+    if isinstance(email_str, tuple):
+        email_str = email_str[1] if len(email_str) > 1 else email_str[0]
     match = re.search(r'@([\w\.-]+)', str(email_str))
     if match:
         return match.group(1).lower().strip('>')
     return None
 
-def extract_ip_from_received(recv_str):
-    if not recv_str:
-        return None
-    match = re.search(r'\[([0-9a-fA-F\.\:]+)\]', recv_str)
-    if match:
+def _spf_domain(mail):
+    return_path = mail.headers.get("Return-Path")
+    from_hdr = mail.headers.get("From")
+
+    domain = get_domain_from_email(return_path) if return_path else None
+    from_domain = get_domain_from_email(from_hdr) if from_hdr else None
+
+    if domain and '.' not in domain:
+        domain = from_domain or domain
+    elif not domain:
+        domain = from_domain
+    return domain
+
+def _public_ip(ip):
+    try:
+        return not ipaddress.ip_address(ip).is_private
+    except ValueError:
+        return False
+
+def _ip_from_headers(mail):
+    x_sender = mail.headers.get("X-Sender-IP")
+    if x_sender:
+        candidate = x_sender.strip() if isinstance(x_sender, str) else str(x_sender[0]).strip()
+        if _public_ip(candidate):
+            return candidate
+
+    auth_results = mail.headers.get("Authentication-Results", "")
+    if isinstance(auth_results, list):
+        auth_results = " ".join(auth_results)
+    match = re.search(r'client-ip=([0-9a-fA-F\.\:]+)', auth_results, re.I)
+    if match and _public_ip(match.group(1)):
         return match.group(1)
-    host_match = re.match(r'^([^\s\(]+)', recv_str)
-    if host_match:
-        host = host_match.group(1)
-        if re.match(r'^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$', host) or re.match(r'^[0-9a-fA-F\:]+$', host):
-            return host
+
+    match = re.search(r'sender IP is ([0-9a-fA-F\.\:]+)', auth_results, re.I)
+    if match and _public_ip(match.group(1)):
+        return match.group(1)
     return None
 
 def get_sender_ip(mail):
     for recv in mail.received:
         from_raw = recv.get('from')
-        ip = extract_ip_from_received(from_raw)
-        if ip:
-            try:
-                if not ipaddress.ip_address(ip).is_private:
-                    return ip
-            except:
-                pass
-    return None
+        ip = extract_ip(from_raw)
+        if ip and _public_ip(ip):
+            return ip
+    return _ip_from_headers(mail)
 
 def check_spf(eml_path):
     result_dict = {"result": "none", "domain": None, "details": ""}
     try:
         mail = mailparser.parse_from_file(eml_path)
         
-        return_path = mail.headers.get("Return-Path")
-        from_hdr = mail.headers.get("From")
-        
-        domain = None
-        if return_path:
-            domain = get_domain_from_email(return_path)
-        if not domain and from_hdr:
-            domain = get_domain_from_email(from_hdr)
+        domain = _spf_domain(mail)
             
         if not domain:
             result_dict["details"] = "No domain found in Return-Path or From"
