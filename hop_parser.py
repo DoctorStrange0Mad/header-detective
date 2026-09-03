@@ -1,33 +1,56 @@
 import sys
 import json
 import re
+import ipaddress
 import mailparser
 from dateutil import parser as date_parser
 from dateutil import tz as date_tz
 
+def _valid_ip(candidate):
+    try:
+        ipaddress.ip_address(candidate)
+        return True
+    except ValueError:
+        return False
+
 def extract_ip(from_str):
     if not from_str:
         return None
+
     match = re.search(r'\[([0-9a-fA-F\.\:]+)\]', from_str)
-    if match:
+    if match and _valid_ip(match.group(1)):
         return match.group(1)
-    
-    # Check if the host itself is just an IP
-    host_match = re.match(r'^([^\s\(]+)', from_str)
+
+    for match in re.finditer(r'\(([0-9a-fA-F\.\:]+)\)', from_str):
+        candidate = match.group(1)
+        if _valid_ip(candidate):
+            return candidate
+
+    host_match = re.match(r'^([^\s\(\[]+|\[[0-9a-fA-F\.\:]+\])', from_str)
     if host_match:
-        host = host_match.group(1)
-        if re.match(r'^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$', host) or re.match(r'^[0-9a-fA-F\:]+$', host):
+        host = host_match.group(1).strip('[]')
+        if _valid_ip(host):
             return host
     return None
 
 def extract_host(from_str):
     if not from_str:
         return None
-    # Usually the first token before space or parentheses is the host
+
+    if re.search(r'\buserid\s+\d+\)', from_str, re.I):
+        return None
+
+    helo_match = re.search(r'\bhelo=([^\s\)]+)', from_str, re.I)
+    if helo_match:
+        return helo_match.group(1)
+
     match = re.match(r'^([^\s\(]+)', from_str)
     if match:
-        return match.group(1)
-    return from_str
+        host = match.group(1).strip('[]')
+        if _valid_ip(host):
+            return None
+        return host
+    return None
 
 def parse_hops(filepath):
     warnings = []
