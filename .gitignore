@@ -6,3 +6,11 @@ outputs/
 out1.json
 out2.json
 fake_output.py
+
+# MaxMind GeoIP database — large binary, must not be committed
+# Each developer downloads their own copy from maxmind.com
+GeoLite2-City.mmdb
+*.mmdb
+
+# Frontend build artefacts
+frontend/node_modules/
