@@ -1,7 +1,9 @@
 # Header Detective
 
-Parses `.eml` email files for SPF/DKIM/DMARC results and relay hop info,
-and plots the relay path on a world map (Geo Visualizer module).
+Multi-signal email phishing analysis tool. Parses `.eml` files and evaluates
+them across four dimensions: email relay tracing, authentication (SPF/DKIM/DMARC),
+geolocation of relay hops, and NLP-based language threat analysis. Produces a
+composite threat scorecard and PDF report.
 
 ---
 
@@ -13,7 +15,7 @@ and plots the relay path on a world map (Geo Visualizer module).
 | Jayshree | Geo Visualizer (Map Builder) | `geo_lookup.py` / `geo_preview.py` |
 | Ashith | Language Detective (NLP) | `language_detector/detector.py` / `api.py` (`POST /analyze-language`) |
 | Sahishnu | Link/Attachment Scanner + Campaign Graph | — |
-| Pushkar | Scorecard + Report Generator | — |
+| **Pushkar** | **Scorecard + Report Generator** | `scorecard_builder.py` / `report_generator.py` |
 | Sagar | Dashboard Integrator | — |
 
 ---
@@ -69,6 +71,41 @@ The response contains `language_analysis.model.phishing_probability`,
 and `warnings`. A model-only medium-risk result with no indicators is an
 uncertain signal requiring review; it does not prove the email is phishing.
 This module is one input to the final multi-signal score owned by Members 5/6.
+
+### Scorecard + Report Generator (Member 5)
+
+Ingests Tejas's `/analyze` output, Jayshree's geo enrichment, and Ashith's
+language analysis to produce a **composite threat scorecard** (0–100) and a
+**PDF report** with color-coded severity, relay timeline, and recommendations.
+
+```bash
+# Build a scorecard from Tejas's JSON output
+python scorecard_builder.py tejas_output.json [geo_payload.json] [language_output.json]
+
+# Generate a PDF report from the scorecard
+python report_generator.py scorecard.json -o report.pdf
+```
+
+Or use programmatically:
+
+```python
+from scorecard_builder import ScorecardBuilder
+from report_generator import ReportGenerator
+
+builder = ScorecardBuilder()
+result = builder.build(tejas_output, geo_payload=geo, language_output=lang)
+
+pdf = ReportGenerator().generate_pdf(result, "report.pdf")
+```
+
+**Scoring**: Each of four signals (auth, geo, language, link) scores 0–30.
+The sum is capped at 100 and classified as `none` / `low` / `medium` / `high` /
+`critical`. Auth scoring penalizes SPF/DKIM/DMARC failures with compound bonuses.
+Geo scoring detects unresolved hops and large geographic jumps. Language scoring
+maps directly from Ashith's `language_threat_score`. Link scoring defaults to 0
+until Sahishnu's module is integrated.
+
+See [`SCORECARD_CONTRACT.md`](./SCORECARD_CONTRACT.md) for the full output schema.
 
 ---
 
@@ -207,6 +244,8 @@ npm test
 | [geoip2](https://pypi.org/project/geoip2/) | MaxMind DB reader (Geo Visualizer) |
 | [transformers](https://huggingface.co/docs/transformers/) + [PyTorch](https://pytorch.org/) | Local phishing classifier (`dima806/phishing-email-detection`) |
 | [spaCy](https://spacy.io/) + `en_core_web_sm` | Local NER for language-analysis context |
+| [reportlab](https://www.reportlab.com/) | PDF report generation (Scorecard module) |
+| [pydantic](https://docs.pydantic.dev/) | Schema validation for scorecard output |
 
 ### Frontend (Geo Visualizer)
 
@@ -219,7 +258,9 @@ npm test
 
 ---
 
-## 6. Output contract
+## 6. Output contracts
 
-See [`OUTPUT_CONTRACT.md`](./OUTPUT_CONTRACT.md) for the exact JSON shape that
-the Geo Visualizer hands off downstream (Pushkar / Sagar).
+- [`OUTPUT_CONTRACT.md`](./OUTPUT_CONTRACT.md) — Geo Visualizer payload schema
+  (Jayshree → Pushkar / Sagar)
+- [`SCORECARD_CONTRACT.md`](./SCORECARD_CONTRACT.md) — Scorecard + Report schema
+  (Pushkar → Sagar dashboard)
