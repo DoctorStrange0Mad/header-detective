@@ -63,12 +63,20 @@
 }
 ```
 
-### 4. Link/Attachment risk from Sahishnu (future, not yet implemented)
+### 4. Link/Attachment risk from Sahishnu
 
-Placeholder structure:
+URL and attachment extraction is implemented in `api.py` (`extract_artifacts()`).
+The `artifacts` object is returned by `/analyze-complete` and consumed by the dashboard.
+
+Risk scoring (malicious/suspicious classification) is not yet implemented — the
+scorecard defaults `link_attachment_score` to 0 when `link_analysis` is absent.
 
 ```json
 {
+  "artifacts": {
+    "urls": [ { "url": "string", "domain": "string|null" } ],
+    "attachments": [ { "name": "string", "content_type": "string", "size_bytes": 0 } ]
+  },
   "link_analysis": {
     "urls_scanned": 0,
     "malicious_urls": 0,
@@ -168,7 +176,7 @@ The overall score is the sum of four component scores (each 0–30), capped at 1
 | `auth_score` | 30 | `auth.spf`, `auth.dkim`, `auth.dmarc` | Each failed protocol contributes penalties |
 | `geo_score` | 30 | `geo.hops[].geo`, `geo.path`, `geo.unresolved_hop_count` | Unresolved hops, impossible travel, routing anomalies |
 | `language_score` | 30 | `language_analysis.language_threat_score` | Direct mapping from 0.0–1.0 to 0–30 |
-| `link_attachment_score` | 30 | Sahishnu's module (future) | Defaults to 0 when unavailable |
+| `link_attachment_score` | 30 | Sahishnu's module | Defaults to 0 when `link_analysis` is absent |
 
 ### Threat Levels
 
@@ -221,7 +229,7 @@ Direct mapping: `language_threat_score` (0.0–1.0) × 30, rounded to nearest in
 
 ### Link/Attachment Scoring (`link_attachment_score` — max 30)
 
-When Sahishnu's module is unavailable, defaults to 0. When available, `link_risk_score` (0.0–1.0) × 30.
+When `link_analysis` is absent from the input, defaults to 0. When present, `link_risk_score` (0.0–1.0) × 30.
 
 ---
 

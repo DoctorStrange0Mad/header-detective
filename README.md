@@ -14,9 +14,9 @@ composite threat scorecard and PDF report.
 | Tejas | Relay Tracing + Auth Checks | `main.py` / `api.py` |
 | Jayshree | Geo Visualizer (Map Builder) | `geo_lookup.py` / `geo_preview.py` |
 | Ashith | Language Detective (NLP) | `language_detector/detector.py` / `api.py` (`POST /analyze-language`) |
-| Sahishnu | Link/Attachment Scanner + Campaign Graph | — |
+| Sahishnu | Link/Attachment Scanner + Campaign Graph | `api.py` (`extract_artifacts()` / `POST /analyze-complete`) / `frontend/src/DevPreview.jsx` (CampaignGraph) |
 | **Pushkar** | **Scorecard + Report Generator** | `scorecard_builder.py` / `report_generator.py` |
-| Sagar | Dashboard Integrator | — |
+| Sagar | Dashboard Integrator | `frontend/src/DevPreview.jsx` / `frontend/src/main.jsx` |
 
 ---
 
@@ -102,8 +102,8 @@ pdf = ReportGenerator().generate_pdf(result, "report.pdf")
 The sum is capped at 100 and classified as `none` / `low` / `medium` / `high` /
 `critical`. Auth scoring penalizes SPF/DKIM/DMARC failures with compound bonuses.
 Geo scoring detects unresolved hops and large geographic jumps. Language scoring
-maps directly from Ashith's `language_threat_score`. Link scoring defaults to 0
-until Sahishnu's module is integrated.
+maps directly from Ashith's `language_threat_score`. Link scoring uses Sahishnu's
+`link_risk_score` from URL and attachment analysis.
 
 See [`SCORECARD_CONTRACT.md`](./SCORECARD_CONTRACT.md) for the full output schema.
 
