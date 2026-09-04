@@ -1,95 +1,33 @@
-/*
- * DEV PREVIEW — manual visual verification only.
- * NOT part of the production dashboard. NOT to be imported by Sagar's code.
- *
- * What it does:
- *   1. Fetches the hardcoded sample payload from GET /geo-preview/sample
- *      (proxied to http://localhost:8002 by vite.config.js)
- *   2. Renders HopMap.jsx with that payload so the map can be visually checked
- *      in a real browser before handoff to the rest of the team.
- *
- * To run:
- *   Terminal 1: uvicorn geo_preview:app --reload --port 8002
- *               (from the repo root, not this folder)
- *   Terminal 2: npm run dev
- *               (from this frontend/ folder)
- *   Browser:    http://localhost:5173
- */
-
-import React, { useEffect, useState } from "react";
+import React, { useMemo, useState } from "react";
 import HopMap from "./components/HopMap";
+import "./dashboard.css";
+
+const labels = { overview: "Overview", authentication: "Authentication", relay: "Relay path", campaigns: "Campaign graph", location: "Geo location", intelligence: "Threat intelligence", links: "Links & files" };
+const icons = { overview: "⌂", authentication: "✓", relay: "◎", campaigns: "◌", location: "◉", intelligence: "✦", links: "⌘" };
+const titleCase = (value) => String(value || "Unavailable").replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+const stateClass = (value) => ["pass", "low", "none", "safe"].includes(String(value).toLowerCase()) ? "good" : ["softfail", "neutral", "medium", "suspicious"].includes(String(value).toLowerCase()) ? "warn" : String(value).toLowerCase() === "unscanned" ? "unknown" : "bad";
+function scoreFromBackend(data) { const scorecard = data.scorecard || {}; return { score: Number(scorecard.overall_score || 0), level: scorecard.overall_risk_level || "none", available: scorecard.overall_score != null }; }
+function Gauge({ score, level }) { const color = level === "critical" ? "#e85a4f" : level === "high" ? "#ef8b38" : level === "medium" ? "#e6ad37" : "#4fb783"; return <div className="gauge" style={{ "--score": `${score * 3.6}deg`, "--gauge": color }}><div><strong>{score}</strong><span>/ 100</span><small>{titleCase(level)} risk</small></div></div>; }
+function Metric({ label, value, caption }) { return <article className="metric"><span>{label}</span><strong>{value}</strong><small>{caption}</small></article>; }
+function Pill({ value }) { return <span className={`pill ${stateClass(value)}`}>{titleCase(value)}</span>; }
+function Bar({ name, value, max = 30 }) { const pct = Math.min(100, Math.round((Number(value || 0) / max) * 100)); return <div className="component"><div><span>{name}</span><b>{pct}%</b></div><div className="track"><i style={{ width: `${pct}%` }} /></div></div>; }
+function Empty({ title, detail }) { return <div className="empty"><span>◌</span><strong>{title}</strong><p>{detail}</p></div>; }
+function backendProbability(value) { return typeof value === "number" && Number.isFinite(value) && value >= 0 && value <= 1 ? value : null; }
+function CampaignGraph({ sender, hops, urls }) { const nodes = [{ name: sender || "Sender", type: "email" }, ...hops.slice(0, 4).filter((hop) => hop.from_ip).map((hop) => ({ name: hop.from_ip, type: "ip" })), ...urls.slice(0, 8).map((item) => ({ name: item.domain || item.url, type: "url" }))]; if (nodes.length < 2) return <Empty title="Not enough campaign evidence" detail="Upload an email with relay or URL data to view its relationships." />; return <div className="campaign-layout"><svg className="campaign-graph" viewBox="0 0 640 360" role="img" aria-label="Email relationship graph"><g>{nodes.slice(1).map((_, index) => { const angle = (Math.PI * 2 * index) / (nodes.length - 1) - Math.PI / 2; return <line key={index} x1="320" y1="180" x2={320 + Math.cos(angle) * 115} y2={180 + Math.sin(angle) * 115} />; })}</g>{nodes.map((node, index) => { const angle = index ? (Math.PI * 2 * (index - 1)) / (nodes.length - 1) - Math.PI / 2 : 0; const x = index ? 320 + Math.cos(angle) * 115 : 320, y = index ? 180 + Math.sin(angle) * 115 : 180; return <g key={`${node.type}-${node.name}`} transform={`translate(${x} ${y})`}><circle className={index ? node.type : "email"} r={index ? 17 : 34} /><text y={index ? 34 : 5}>{node.name.length > 22 ? `${node.name.slice(0, 22)}…` : node.name}</text></g>; })}</svg><aside className="entity-key"><p className="eyebrow">Entity key</p><span><i className="email" /> Sender</span><span><i className="ip" /> Relay IP</span><span><i className="url" /> URL domain</span><small>{nodes.length} entities from this email</small></aside></div>; }
 
 export default function DevPreview() {
-  const [mapData, setMapData] = useState(null);   // null = loading
-  const [fetchError, setFetchError] = useState(null);
-
-  useEffect(() => {
-    fetch("/geo-preview/sample")
-      .then((res) => {
-        if (!res.ok) {
-          return res.json().then((body) => {
-            throw new Error(
-              body?.detail ?? `HTTP ${res.status} from /geo-preview/sample`
-            );
-          });
-        }
-        return res.json();
-      })
-      .then((data) => setMapData(data))
-      .catch((err) => setFetchError(err.message));
-  }, []);
-
-  return (
-    <div style={{ maxWidth: 900, margin: "2rem auto", fontFamily: "sans-serif" }}>
-      {/* Header banner so it's obvious this is a dev tool */}
-      <div
-        style={{
-          background: "#fef9c3",
-          border: "1px solid #fde047",
-          borderRadius: 6,
-          padding: "0.6rem 1rem",
-          marginBottom: "1rem",
-          fontSize: "0.85rem",
-          color: "#713f12",
-        }}
-      >
-        <strong>Dev preview</strong> — fetching from{" "}
-        <code>GET /geo-preview/sample</code> on localhost:8002. This page is for
-        manual visual verification only; it is not part of the production
-        dashboard.
-      </div>
-
-      <h2 style={{ marginBottom: "0.5rem" }}>
-        Header Detective — Geo Visualizer
-      </h2>
-
-      {/* Fetch error state */}
-      {fetchError && (
-        <div
-          style={{
-            padding: "1rem",
-            background: "#fef2f2",
-            border: "1px solid #fca5a5",
-            borderRadius: 6,
-            color: "#7f1d1d",
-            marginBottom: "1rem",
-          }}
-        >
-          <strong>Could not load sample data.</strong>
-          <br />
-          {fetchError}
-          <br />
-          <br />
-          Make sure the FastAPI server is running:
-          <br />
-          <code>uvicorn geo_preview:app --reload --port 8002</code>
-          <br />
-          (run from the repo root, not from the frontend/ folder)
-        </div>
-      )}
-
-      {/* HopMap handles its own null (loading) and empty-path states */}
-      {!fetchError && <HopMap mapData={mapData} />}
-    </div>
-  );
+  const [data, setData] = useState(null), [active, setActive] = useState("overview"), [fileName, setFileName] = useState(""), [loading, setLoading] = useState(false), [error, setError] = useState("");
+  const model = useMemo(() => { const source = data || {}, report = source.report || {}, score = scoreFromBackend(source), auth = source.auth || report.detailed_findings?.authentication || {}, language = source.language_analysis || report.detailed_findings?.language || {}, hops = source.hops || report.timeline || [], geo = source.map || source.geo || source.geolocation || null, artifacts = source.artifacts || {}, components = source.scorecard?.component_scores || {}; return { report, score, auth, language, hops, geo, artifacts, components }; }, [data]);
+  async function upload(file) { if (!file) return; if (!file.name.toLowerCase().endsWith(".eml")) return setError("Please choose a .eml email file."); setLoading(true); setError(""); setFileName(file.name); try { const form = new FormData(); form.append("file", file); const response = await fetch("/analyze-complete", { method: "POST", body: form }); const body = await response.json(); if (!response.ok) throw new Error(body.detail || "The email could not be analyzed."); setData(body); setActive("overview"); } catch (err) { setData(null); setError(err.message || "Could not reach the analysis service."); } finally { setLoading(false); } }
+  const indicators = data?.scorecard?.key_indicators || model.language.indicators || data?.warnings || [], sender = data?.sender_domain || model.report.sender_domain || "Unknown sender", links = data?.link_analysis, urls = model.artifacts.urls || links?.urls || [], attachments = model.artifacts.attachments || links?.attachments || [];
+  const phishingProbability = backendProbability(model.language.model?.phishing_probability);
+  return <div className="app-shell"><aside className="sidebar"><div className="brand"><i>S</i><span>Shield.</span></div><p className="eyebrow">Email forensics</p><nav>{Object.entries(labels).map(([key, label]) => <button key={key} className={active === key ? "active" : ""} onClick={() => setActive(key)}><b>{icons[key]}</b>{label}</button>)}</nav><div className="sidebar-footer"><span className="live-dot" /> Protection active<small>Analysis is local to this workspace</small></div></aside><main><header><div><p className="crumb">EMAIL FORENSICS / {labels[active].toUpperCase()}</p><h1>{labels[active]}</h1></div><div className="operational"><span className="live-dot" /> System operational</div></header><section className="workspace"><div className="intro"><div><p className="eyebrow">Investigation workbench</p><h2>{active === "overview" ? "Email security assessment" : labels[active]}</h2><p>Clear signals for the message under review — without exposing raw headers.</p></div><label className={`upload ${loading ? "loading" : ""}`}><input type="file" accept=".eml,message/rfc822" onChange={(e) => upload(e.target.files?.[0])} />{loading ? "Analyzing…" : "Analyze email →"}</label></div>{fileName && <div className="file-note">Showing results for <strong>{fileName}</strong></div>}{error && <div className="error">{error}</div>}
+  {!data ? <section className="panel wide"><Empty title="Upload an email to start" detail="Choose a .eml file and the dashboard will display only the results returned by the backend." /></section> : <>{active === "overview" && <><section className="hero-card"><div><p className="eyebrow">Sender domain</p><h3>{sender}</h3><p>{model.report.summary || "Review authentication, routing, and language signals in one place."}</p></div><Gauge score={model.score.score} level={model.score.level} /></section><div className="metrics"><Metric label="Risk score" value={`${model.score.score}/100`} caption={titleCase(model.score.level)} /><Metric label="Relay hops" value={model.hops.length} caption={`${model.geo?.unresolved_hop_count || 0} unresolved`} /><Metric label="Auth checks" value={Object.keys(model.auth).length || "—"} caption="SPF · DKIM · DMARC" /><Metric label="Threat indicators" value={indicators.length} caption="Need review" /></div><div className="grid two"><section className="panel"><div className="panel-title"><div><p className="eyebrow">Risk composition</p><h3>Signal breakdown</h3></div><span className={`risk-label ${stateClass(model.score.level)}`}>{titleCase(model.score.level)}</span></div><Bar name="Authentication" value={model.components.auth_score} /><Bar name="Routing & geography" value={model.components.geo_score} /><Bar name="Language signals" value={model.components.language_score} /><Bar name="Links & attachments" value={model.components.link_attachment_score} /></section><section className="panel"><p className="eyebrow">Priority evidence</p><h3>What needs attention</h3><div className="evidence">{indicators.slice(0, 4).map((item, i) => <div key={i}><Pill value={item.severity || "medium"} /><p>{item.description || item.phrase || item}</p></div>)}{!indicators.length && <Empty title="No high-priority evidence" detail="The backend did not report actionable indicators." />}</div></section></div></>}
+  {active === "authentication" && <section className="panel wide"><p className="eyebrow">Sender verification</p><h2>Authentication results</h2><p className="section-copy">Only the checks that establish sender identity are shown.</p><div className="auth-grid">{["spf", "dkim", "dmarc"].map((key) => { const item = model.auth[key] || {}; return <article key={key} className="auth-card"><div><span>{key.toUpperCase()}</span><Pill value={item.result} /></div><strong>{item.domain || item.policy || (item.result ? `${titleCase(item.result)} result` : "Not provided")}</strong>{key === "dmarc" && item.alignment && <small>Alignment: SPF {item.alignment.spf ? "pass" : "not aligned"} · DKIM {item.alignment.dkim ? "pass" : "not aligned"}</small>}{item.details && <small>{item.details}</small>}</article>; })}</div></section>}
+  {active === "relay" && <section className="panel wide"><p className="eyebrow">Message delivery</p><h2>Relay path</h2><p className="section-copy">Infrastructure details relevant to message origin and routing.</p>{model.geo ? <HopMap mapData={model.geo} /> : <>{model.hops.length ? <div className="relay-list">{model.hops.map((hop, i) => <article key={hop.hop_index ?? i}><b>{String(i + 1).padStart(2, "0")}</b><div><strong>{hop.from_host || "Unknown relay"}</strong><span>{hop.from_ip || "IP not available"} → {hop.by_host || "destination not available"}</span></div><small>{hop.protocol || "Protocol unknown"}</small></article>)}</div> : <Empty title="No relay data" detail="The backend did not provide any parsable delivery hops." />}</>}</section>}
+  {active === "location" && <section className="panel wide"><p className="eyebrow">Infrastructure geography</p><h2>Geolocation</h2><p className="section-copy">Only public relay IPs resolved by the backend are mapped.</p>{model.geo ? <HopMap mapData={model.geo} /> : <Empty title="No locations available" detail="Geo data is not available for this email. Private IPs and an unavailable GeoLite database are not mapped." />}</section>}
+  {active === "links" && <section className="panel wide"><p className="eyebrow">Message artifacts</p><h2>Links & attachments</h2><p className="section-copy">URLs and files extracted from the uploaded email. No reputation is implied unless the backend supplies one.</p><div className="artifact-columns"><div><h3>URLs <span>{urls.length}</span></h3>{urls.length ? <div className="artifact-list">{urls.map((item, index) => <article key={`${item.url}-${index}`}><div><strong>{item.domain || "Unknown domain"}</strong><small title={item.url}>{item.url}</small></div><Pill value={item.status || "unscanned"} /></article>)}</div> : <Empty title="No URLs found" detail="The message body did not contain extractable HTTP(S) links." />}</div><div><h3>Attachments <span>{attachments.length}</span></h3>{attachments.length ? <div className="artifact-list">{attachments.map((item, index) => <article key={`${item.name}-${index}`}><div><strong>{item.name}</strong><small>{item.content_type || "Unknown type"}{item.size_bytes != null ? ` · ${(item.size_bytes / 1024).toFixed(1)} KB` : ""}</small></div><Pill value={item.status || "unscanned"} /></article>)}</div> : <Empty title="No attachments" detail="No file artifacts were found in this email." />}</div></div></section>}
+  {active === "campaigns" && <section className="panel wide"><p className="eyebrow">Relationship map</p><h2>Campaign graph</h2><p className="section-copy">Entities extracted from this email and their direct relationship to the sender.</p><CampaignGraph sender={sender} hops={model.hops} urls={urls} /></section>}
+  {active === "intelligence" && <section className="panel wide"><p className="eyebrow">Content intelligence</p><h2>Threat signals</h2><p className="section-copy">Language cues and link reputation that materially affect the assessment.</p><div className="intel-grid"><article><span>Phishing probability</span><strong>{phishingProbability === null ? "—" : `${(phishingProbability * 100).toFixed(2)}%`}</strong><div className="track"><i style={{ width: `${phishingProbability === null ? 0 : phishingProbability * 100}%` }} /></div><small>{phishingProbability === null ? "Classifier probability was not returned" : "From language_analysis.model.phishing_probability"}</small></article><article><span>URLs flagged</span><strong>{links?.malicious_urls ?? 0}</strong><small>{links?.urls_scanned ? `${links.urls_scanned} scanned` : "No link scan returned"}</small></article><article><span>Attachments flagged</span><strong>{links?.malicious_attachments ?? 0}</strong><small>Only malicious files are counted</small></article></div><div className="tag-section"><h3>Detected language indicators</h3>{model.language.indicators?.length ? model.language.indicators.map((item, i) => <span className={`tag ${stateClass(item.severity)}`} key={i}>{item.phrase}</span>) : <p className="muted">No language indicators returned by the backend.</p>}</div></section>}</>}
+  </section></main></div>;
 }

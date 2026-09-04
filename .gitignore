@@ -1,4 +1,4 @@
-venv/
+.venv/
 __pycache__/
 *.pyc
 .DS_Store
@@ -19,3 +19,4 @@ frontend/node_modules/
 .cache/
 hf_cache/
 models/
+.venv
